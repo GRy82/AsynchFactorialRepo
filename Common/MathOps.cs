@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Common
 {
-    class Math
+    public class MathOps
     {
         public static ulong Factorial(ulong number)
         {

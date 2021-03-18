@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.ComponentModel;
+using Common;
 
 namespace AsynchFactorial
 {
@@ -20,9 +22,32 @@ namespace AsynchFactorial
     /// </summary>
     public partial class MainWindow : Window
     {
+        BackgroundWorker _bw = new BackgroundWorker();
         public MainWindow()
         {
             InitializeComponent();
+            _bw.DoWork += new DoWorkEventHandler(bw_DoWork);
+            _bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(_bw_RunWorkerCompleted);
+
+
+        }
+        void bw_DoWork(object sender, DoWorkEventArgs e)
+        {
+            long number = (long)e.Argument;
+            e.Result = Common.MathOps.Factorial((ulong)number);
+        }
+
+        private void btnCompute_Click(object sender, RoutedEventArgs e)
+        {
+            long arg = long.Parse(txtArg.Text);
+            lblStatus.Content = "Calculating...";
+            _bw.RunWorkerAsync(arg);
+        }
+
+        void _bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            lblResult.Content = e.Result;
+            lblStatus.Content = "Completed";
         }
     }
 }
